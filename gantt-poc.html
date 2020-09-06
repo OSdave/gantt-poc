@@ -63,6 +63,7 @@
           { title: 'card 2', startAt: '2019-01-01', endAt: '2019-01-13' },
           { title: 'card 3', startAt: '2019-02-15', endAt: '2019-03-20' },
           { title: 'card 4', startAt: '2019-02-10', endAt: '2019-05-10' },
+          { title: 'card 5', startAt: '2019-01-01T05:00:00', endAt: '2019-01-01T16:00:00' },
         ];
 
         const dist = (to, from) => {
@@ -73,8 +74,21 @@
             ).length(base)
           )+1;
         }
+        const localeStringFormat = () => {
+          switch (base) {
+            case 'hours':
+              return {hour: '2-digit', minute: '2-digit'};
+            case 'days':
+            case 'weeks':
+              return {month: 'short', day: 'numeric'};
+              break;
+            case 'months':
+              return {month: 'short', year: 'numeric'};
+              break;
+          }
+        }
         const timepoint = (i) => {
-          return luxon.DateTime.fromISO(beginOfTime).plus({[base]: i}).toLocaleString({month: 'short', day: 'numeric'}) // in base
+          return luxon.DateTime.fromISO(beginOfTime).plus({[base]: i}).toLocaleString(localeStringFormat()) // in base
         }
 
         const startOf = (card) => {
@@ -102,16 +116,25 @@
   </head>
 
   <body>
+    <h3>base: hours</h3>
+    <div class="gantt">
+      <script type="text/javascript">
+        generateGrid('2019-01-01', '2019-01-02', 'hours')
+      </script>
+    </div>
+    <h3>base: days</h3>
     <div class="gantt">
       <script type="text/javascript">
         generateGrid('2019-01-01', '2020-01-01', 'days')
       </script>
     </div>
+    <h3>base: weeks</h3>
     <div class="gantt">
       <script type="text/javascript">
         generateGrid('2019-01-01', '2020-01-01', 'weeks')
       </script>
     </div>
+    <h3>base: months</h3>
     <div class="gantt">
       <script type="text/javascript">
         generateGrid('2019-01-01', '2022-01-01', 'months')
